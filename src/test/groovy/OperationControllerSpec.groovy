@@ -2,25 +2,24 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyFilter
 import com.fasterxml.jackson.databind.ser.FilterProvider
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider
-import com.maat.bestbuy.integration.exception.ResourceNotFoundException
-import com.maat.bestbuy.integration.model.Dropdown
-import com.maat.bestbuy.integration.model.Payload
-import com.maat.bestbuy.integration.model.ResponseFilter
-import com.maat.bestbuy.integration.service.OperationsService
-import com.maat.bestbuy.integration.web.controller.OperationsController
+import com.spring.beanFilter.exception.ResourceNotFoundException
+import com.spring.beanFilter.model.Dropdown
+import com.spring.beanFilter.model.Payload
+import com.spring.beanFilter.model.ResponseFilter
+import com.spring.beanFilter.service.OperationsService
+import com.spring.beanFilter.web.controller.Controller
 import org.springframework.http.converter.json.MappingJacksonValue
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.request.async.DeferredResult
-import rx.Observable
 import spock.lang.Shared
 import spock.lang.Specification
 
-class OperationControllerSpec extends  Specification{
+class OperationControllerSpec extends Specification {
 
     @Shared
-    OperationsController operationsController
+    Controller operationsController
 
     @Shared
     OperationsService operationsServiceMock
@@ -30,11 +29,11 @@ class OperationControllerSpec extends  Specification{
 
     def setup() {
         operationsServiceMock = Mock(OperationsService)
-        operationsController = new OperationsController(operationsServiceMock)
+        operationsController = new Controller(operationsServiceMock)
         mockMvc = MockMvcBuilders.standaloneSetup(operationsController).build()
     }
 
-    def 'test load drop downs successful' () {
+    def 'test load drop downs successful'() {
         setup:
         List<Dropdown> dropdownList = new ArrayList()
         dropdownList.add(Dropdown.builder().appId("1").appMerlinCode("REIM").appName("REIM STACK").build())
@@ -57,7 +56,7 @@ class OperationControllerSpec extends  Specification{
         response?.status == 200
     }
 
-    def 'test bad request exception' () {
+    def 'test bad request exception'() {
         setup:
         String payload = "{\"dropdownName\": \"\", \"responseFilter\": {}}"
 
@@ -69,7 +68,7 @@ class OperationControllerSpec extends  Specification{
         response?.status == 400
     }
 
-    def 'test resource not found exception' () {
+    def 'test resource not found exception'() {
         setup:
         Payload payload = new Payload()
         payload.setDropdownName("environment")
@@ -78,7 +77,9 @@ class OperationControllerSpec extends  Specification{
         ResponseFilter responseFilter = new ResponseFilter()
         responseFilter.setApplication(applicationList)
         payload.setResponseFilter(responseFilter)
-        operationsServiceMock.getDropdown(payload) >> {throw new ResourceNotFoundException("No environment values found for the filter: " + responseFilter)}
+        operationsServiceMock.getDropdown(payload) >> {
+            throw new ResourceNotFoundException("No environment values found for the filter: " + responseFilter)
+        }
         String payload1 = "{\"dropdownName\": \"environment\", \"responseFilter\": {\"application\" : [\"2\"] }}"
 
         when:

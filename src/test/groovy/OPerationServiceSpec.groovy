@@ -2,22 +2,21 @@ import com.fasterxml.jackson.databind.ser.BeanPropertyFilter
 import com.fasterxml.jackson.databind.ser.FilterProvider
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider
-import com.maat.bestbuy.integration.dao.OperationsDao
-import com.maat.bestbuy.integration.model.Dropdown
-import com.maat.bestbuy.integration.model.Payload
-import com.maat.bestbuy.integration.model.ResponseFilter
-import com.maat.bestbuy.integration.service.OperationsService
+import com.spring.beanFilter.dao.DAO
+import com.spring.beanFilter.model.Dropdown
+import com.spring.beanFilter.model.Payload
+import com.spring.beanFilter.model.ResponseFilter
+import com.spring.beanFilter.service.OperationsService
 import org.springframework.http.converter.json.MappingJacksonValue
 import spock.lang.Shared
 import spock.lang.Specification
-import rx.Observable
 
 class OPerationServiceSpec extends Specification {
 
     @Shared
     OperationsService operationsService
     @Shared
-    OperationsDao operationsDaoMock
+    DAO operationsDaoMock
     @Shared
     Payload payload
     @Shared
@@ -28,11 +27,11 @@ class OPerationServiceSpec extends Specification {
     List<String> list
 
     def setup() {
-        operationsDaoMock = Mock(OperationsDao)
+        operationsDaoMock = Mock(DAO)
         operationsService = new OperationsService(operationsDaoMock)
     }
 
-    def 'test sucessful fetch of dropdowns' () {
+    def 'test sucessful fetch of dropdowns'() {
         setup:
         list = new ArrayList<>()
         dropdownList = new ArrayList<>()
@@ -50,6 +49,6 @@ class OPerationServiceSpec extends Specification {
 
         then:
         response.value == mappingJacksonValue.value
-        _*operationsDaoMock.getDropdown(_,_) >> dropdownList
+        _ * operationsDaoMock.getDropdown(_, _) >> dropdownList
     }
 }

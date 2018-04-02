@@ -1,17 +1,12 @@
-import com.maat.bestbuy.integration.dao.OperationsDao
-import com.maat.bestbuy.integration.repository.ApplicationsRepository
-import com.maat.bestbuy.integration.repository.EnvironmentRepository
-import com.maat.bestbuy.integration.repository.InfrastructureMappingRespository
-import com.maat.bestbuy.integration.repository.ServerTypeRepository
-import com.maat.bestbuy.integration.repository.TaskRepository
-import com.maat.bestbuy.integration.repository.TechnologyRepository
+import com.spring.beanFilter.dao.DAO
+import com.spring.beanFilter.repository.*
 import spock.lang.Shared
 import spock.lang.Specification
 
-class OperationDaoSpec extends Specification{
+class OperationDaoSpec extends Specification {
 
     @Shared
-    OperationsDao operationsDao
+    DAO operationsDao
     @Shared
     ApplicationsRepository applicationRepository
     @Shared
